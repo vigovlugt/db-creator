@@ -1,0 +1,8 @@
+.Table {
+    width:300px;
+    position: absolute;
+}
+
+.table-title-change, .table-attribute-add{
+    cursor: pointer;
+}
