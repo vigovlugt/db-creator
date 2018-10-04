@@ -5,8 +5,9 @@ import Table from './components/Table';
 class App extends Component {
   constructor(props){
     super(props);
+
     this.state = {
-      tables:[{title:"test",x:20,y:20}],
+      tables:[{title:"test",attributes:[{title:"id",type:"INT"}],x:20,y:20}],
       contextMenu:{
         display:"none",
         x:0,
@@ -51,8 +52,10 @@ class App extends Component {
 
   createTable(e){
     e.preventDefault();
-    this.setState({tables:[...this.state.tables,{title:prompt("Table name"),x:this.state.contextMenu.x,y:this.state.contextMenu.y}]})
+    let table = {title:prompt("Table name"),attributes:[{title:"id",type:"INT"}],x:this.state.contextMenu.x,y:this.state.contextMenu.y}
+    this.setState({tables:[...this.state.tables,table]});
   }
+
 }
 
 export default App;

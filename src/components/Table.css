@@ -1,8 +1,15 @@
 .Table {
-    width:300px;
+    width:400px;
     position: absolute;
 }
 
-.table-title-change, .table-attribute-add{
+.table-title-change, .table-attribute-add, .table-attribute-remove{
     cursor: pointer;
+}
+
+.table-attribute-title{
+    margin-bottom: 0px;
+}
+.table-attribute-type{
+    width:120px;
 }
