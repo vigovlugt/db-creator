@@ -10,13 +10,14 @@ class Table extends Component {
     this.addAttribute = this.addAttribute.bind(this);
     this.removeAttribute = this.removeAttribute.bind(this);
     this.changeAttributeTitle = this.changeAttributeTitle.bind(this);
+    this.mouseDown = this.mouseDown.bind(this);
   }
 
   render() {
     return (
       <div className="Table card p-2" style={{top:this.state.y,left:this.state.x}}>
         <div className="table-title-bar d-flex align-items-center">
-            <h2 className="table-title">{this.state.title}</h2>
+            <h2 className="table-title" onMouseDown={this.mouseDown}>{this.state.title}</h2>
             <i className="table-title-change fas fa-pen mx-2 text-secondary" onClick={this.changeTitle}></i>
         </div>
         <div className="table-attributes">
@@ -43,6 +44,10 @@ class Table extends Component {
         </div>
       </div>
     );
+  }
+
+  mouseDown(e){
+    this.props.onStartDrag();
   }
 
   addAttribute(){

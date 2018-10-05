@@ -12,22 +12,26 @@ class App extends Component {
         display:"none",
         x:0,
         y:0
-      }
+      },
+      tableDraggingIndex:-1
     }
 
     this.showContextMenu = this.showContextMenu.bind(this);
     this.createTable = this.createTable.bind(this);
+    this.onStartDragTable = this.onStartDragTable.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
+    this.mouseUp = this.mouseUp.bind(this);
   }
 
   render() {
     return (
       <div className="App">
-        <div id="main" onContextMenu={(e)=>{this.showContextMenu(e,"block")}} onClick={(e)=>{this.showContextMenu(e,"none")}} >
+        <div id="main" onMouseUp={this.mouseUp} onMouseMove={this.mouseMove} onContextMenu={(e)=>{this.showContextMenu(e,"block")}} onClick={(e)=>{this.showContextMenu(e,"none")}} >
         
           <div className="tables">
             {
               this.state.tables.map((t,i)=>{
-                return <Table key={i} table={t}/>
+                return <Table key={i} table={t} onStartDrag={()=>{this.onStartDragTable(i)}}/>
               })
             }
           </div>
@@ -35,6 +39,7 @@ class App extends Component {
           <div className="context-menu card p-2" style={{display:this.state.contextMenu.display,top:this.state.contextMenu.y,left:this.state.contextMenu.x}}>
             <div className="list-group">
               <a href="/" className="context-menu-item create-table list-group-item-action text-body" onClick={this.createTable}><b>Create new table</b></a>
+              <a href="/" className="context-menu-item create-table list-group-item-action text-body" onClick={this.exportSql}><b>Export to SQL</b></a>
             </div>
             
           </div>
@@ -48,6 +53,23 @@ class App extends Component {
     this.setState({contextMenu:{display}});
     if(display==="block")
       this.setState({contextMenu:{x:e.clientX,y:e.clientY}})
+  }
+
+  onStartDragTable(i){
+    this.setState({tableDraggingIndex:i});
+  }
+
+  mouseUp(){
+    this.setState({tableDraggingIndex:-1});
+  }
+
+  mouseMove(e){
+    if(this.state.tableDraggingIndex !== -1){
+      let tables = this.state.tables;
+      tables[this.state.tableDraggingIndex].x = e.clientX;
+      tables[this.state.tableDraggingIndex].y = e.clientY;
+      this.setState({tables});
+    }
   }
 
   createTable(e){
