@@ -11,6 +11,7 @@ class Table extends Component {
     this.removeAttribute = this.removeAttribute.bind(this);
     this.changeAttributeTitle = this.changeAttributeTitle.bind(this);
     this.mouseDown = this.mouseDown.bind(this);
+    this.changeAttributeType = this.changeAttributeType.bind(this);
   }
 
   render() {
@@ -26,10 +27,10 @@ class Table extends Component {
             return (
               <div key={i} className="table-attribute d-flex align-items-center my-2">
                 <input className="table-attribute-title form-control mr-2" onChange={(e)=>{this.changeAttributeTitle(e,i)}} value={a.title}/>
-                <select className="table-attribute-type custom-select mr-2">
+                <select value={this.state.attributes[i].type} onChange={(e)=>{this.changeAttributeType(i,e.target.value)}} className="table-attribute-type custom-select mr-2">
                   {
                     ["VARCHAR","INT","BOOLEAN"].map((type,ti)=>{
-                      return <option key={ti} selected={this.state.attributes[i].type === type} value={type}>{type}</option>
+                      return <option key={ti} value={type}>{type}</option>
                     })
                   }
                 </select>
@@ -51,32 +52,49 @@ class Table extends Component {
   }
 
   addAttribute(){
-    this.setState({attributes:[...this.state.attributes,{title:prompt("Attribute name"),type:"VARCHAR"}]})
+    this.setState({attributes:[...this.state.attributes,{title:prompt("Attribute name"),type:"VARCHAR"}]},()=>{
+      this.syncWithApp();
+    });
+    
   }
 
   removeAttribute(i){
     let {attributes} = this.state;
     attributes.splice(i,1);
-    this.setState({attributes})
+    this.setState({attributes},()=>{
+      this.syncWithApp();
+    })
+    
   }
 
   changeAttributeTitle(e,i){
     let {attributes} = this.state;
     attributes[i].title = e.target.value;
-    this.setState({attributes});
+    this.setState({attributes},()=>{
+      this.syncWithApp();
+    });
   }
 
-  changeAttributeType(e,i){
+  changeAttributeType(i,type){
+    let {attributes} = this.state;
+    attributes[i].type = type;
+    this.setState({attributes},()=>{
+      this.syncWithApp();
+    });
+  }
 
+  syncWithApp(){
+    this.props.syncTable(this.state);
   }
 
   changeTitle(){
     let title = prompt("Change title...");
-    if (title !== "" && title)
-      this.setState({title});
+    if (title !== "" && title){
+      this.setState({title},()=>{
+        this.syncWithApp();
+      });
+    }
   }
-
-
 }
 
 export default Table;
