@@ -13,3 +13,8 @@
 .table-attribute-type{
     width:120px;
 }
+
+.table-title{
+    cursor: move;
+    user-select: none;
+}
