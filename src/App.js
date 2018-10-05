@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import Table from './components/Table';
+import tablesToSql from './SQLGenerator';
+
 
 class App extends Component {
   constructor(props){
@@ -21,6 +23,7 @@ class App extends Component {
     this.onStartDragTable = this.onStartDragTable.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.mouseUp = this.mouseUp.bind(this);
+    this.exportSql = this.exportSql.bind(this);
   }
 
   render() {
@@ -31,7 +34,7 @@ class App extends Component {
           <div className="tables">
             {
               this.state.tables.map((t,i)=>{
-                return <Table key={i} table={t} onStartDrag={()=>{this.onStartDragTable(i)}}/>
+                return <Table key={i} table={t} onStartDrag={()=>{this.onStartDragTable(i)}} syncTable={(table)=>{this.syncTable(i,table)}}/>
               })
             }
           </div>
@@ -76,6 +79,17 @@ class App extends Component {
     e.preventDefault();
     let table = {title:prompt("Table name"),attributes:[{title:"id",type:"INT"}],x:this.state.contextMenu.x,y:this.state.contextMenu.y}
     this.setState({tables:[...this.state.tables,table]});
+  }
+
+  syncTable(i,table){
+    let tables = this.state.tables;
+    tables[i] = table;
+    this.setState({tables});
+  }
+
+  exportSql(){
+    let sql = tablesToSql(this.state.tables);
+    alert(sql);
   }
 
 }
